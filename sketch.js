@@ -5,11 +5,38 @@ let y = 15;
 let h = 20;
 let w = 250;
 
+// for speechSynthesis;
+var synth = window.speechSynthesis;
+var voices = [];
+
+function textToSpeech(txt,vid) {
+  if (synth.speaking) {
+    console.error("speechSynthesis.speaking");
+    return;
+  }
+  if (txt !== "") {
+    var ut = new SpeechSynthesisUtterance(txt);
+    ut.voice = voices[vid];
+    synth.speak(ut);
+  }
+}
+
+function setupVoices(){
+  voices = synth.getVoices();
+  for(var i = 0; i < voices.length; i++) {
+    print(i+":" + voices[i].name + "("+ voices[i].lang+")");
+  }  
+}
+
 function setup() {
   createCanvas(300, windowHeight);
-  soundFormats("mp3", "ogg");
 
   setupElements();
+  
+  setupVoices();
+  
+  //textToSpeech("Hydrogen", 53); //53: Google US English
+  //textToSpeech("수소", 63); //63: Google Korean
 }
 
 function draw() {
@@ -22,13 +49,13 @@ function draw() {
 function mousePressed() {
   for (let i = 1; i < n; i++) {
     if (elements[i].contains(mouseX, mouseY)) {
-      elements[i].esound.play();
+      elements[i].speech(53);
     }
   }
 }
 
 class Element {
-  constructor(id, s, ename, kname, x, y, en, ko) {
+  constructor(id, s, ename, kname, x, y) {
     this.id = id;
     this.s = s;
     this.ename = ename;
@@ -38,7 +65,7 @@ class Element {
     this.w = w;
     this.h = h;
     this.tsize = 15;
-    this.esound = loadSound(en);
+   
   }
   show(mx, my) {
     stroke(255);
@@ -95,31 +122,34 @@ class Element {
       return false;
     }
   }
+  speech(vid){
+    textToSpeech(this.ename, vid);
+  }
 }
 
 function setupElements() {
-  elements[1] = new Element(1, "H", "Hydrogen", "수소", x, y, "1-en.ogg");
+  elements[1] = new Element(1, "H", "Hydrogen", "수소", x, y);
   y += h;
   n++;
-  elements[2] = new Element(2, "He", "Helium", "헬륨", x, y, "2-en.ogg");
+  elements[2] = new Element(2, "He", "Helium", "헬륨", x, y);
   y += h;
   n++;
-  elements[3] = new Element(3, "Li", "Lithium", "리튬", x, y, "3-en.ogg");
+  elements[3] = new Element(3, "Li", "Lithium", "리튬", x, y);
   y += h;
   n++;
-  elements[4] = new Element(4, "Be", "Beryllium", "베릴륨", x, y, "4-en.ogg");
+  elements[4] = new Element(4, "Be", "Beryllium", "베릴륨", x, y);
   y += h;
   n++;
-  elements[5] = new Element(5, "B", "Boron", "붕소", x, y, "5-en.ogg");
+  elements[5] = new Element(5, "B", "Boron", "붕소", x, y);
   y += h;
   n++;
-  elements[6] = new Element(6, "C", "Carbon", "탄소", x, y, "6-en.ogg");
+  elements[6] = new Element(6, "C", "Carbon", "탄소", x, y);
   y += h;
   n++;
-  elements[7] = new Element(7, "N", "Nitrogen", "질소", x, y, "7-en.ogg");
+  elements[7] = new Element(7, "N", "Nitrogen", "질소", x, y);
   y += h;
   n++;
-  elements[8] = new Element(8, "O", "Oxygen", "산소", x, y, "8-en.ogg");
+  elements[8] = new Element(8, "O", "Oxygen", "산소", x, y);
   y += h;
   n++;
   elements[9] = new Element(
@@ -128,12 +158,11 @@ function setupElements() {
     "Fluorine",
     "플루오린/불소",
     x,
-    y,
-    "9-en.ogg"
+    y
   );
   y += h;
   n++;
-  elements[10] = new Element(10, "Ne", "Neon", "네온", x, y, "10-en.ogg");
+  elements[10] = new Element(10, "Ne", "Neon", "네온", x, y);
   y += h;
   n++;
   elements[11] = new Element(
@@ -142,8 +171,7 @@ function setupElements() {
     "Sodium/Natrium",
     "소듐/나트륨",
     x,
-    y,
-    "11-en.ogg"
+    y
   );
   y += h;
   n++;
@@ -153,8 +181,7 @@ function setupElements() {
     "Magnesium",
     "마그네슘",
     x,
-    y,
-    "12-en.ogg"
+    y
   );
   y += h;
   n++;
@@ -164,8 +191,7 @@ function setupElements() {
     "Aluminium",
     "알루미늄",
     x,
-    y,
-    "13-en.ogg"
+    y
   );
   y += h;
   n++;
@@ -175,21 +201,20 @@ function setupElements() {
     "Silicon",
     "규소/실리콘",
     x,
-    y,
-    "14-en.ogg"
+    y
   );
   y += h;
   n++;
-  elements[15] = new Element(15, "P", "Phosphorus", "인", x, y, "15-en.ogg");
+  elements[15] = new Element(15, "P", "Phosphorus", "인", x, y);
   y += h;
   n++;
-  elements[16] = new Element(16, "S", "Sulfur", "황", x, y, "16-en.ogg");
+  elements[16] = new Element(16, "S", "Sulfur", "황", x, y);
   y += h;
   n++;
-  elements[17] = new Element(17, "Cl", "Chlorine", "염소", x, y, "17-en.ogg");
+  elements[17] = new Element(17, "Cl", "Chlorine", "염소", x, y);
   y += h;
   n++;
-  elements[18] = new Element(18, "Ar", "Argon", "아르곤", x, y, "18-en.ogg");
+  elements[18] = new Element(18, "Ar", "Argon", "아르곤", x, y);
   y += h;
   n++;
   elements[19] = new Element(
@@ -198,12 +223,11 @@ function setupElements() {
     "Potassium/Kalium",
     "포타슘/칼륨",
     x,
-    y,
-    "19-en.ogg"
+    y
   );
   y += h;
   n++;
-  elements[20] = new Element(20, "Ca", "Calcium", "칼슘", x, y, "20-en.ogg");
+  elements[20] = new Element(20, "Ca", "Calcium", "칼슘", x, y);
   y += h;
   n++;
   elements[n] = new Element(
@@ -212,12 +236,11 @@ function setupElements() {
     "Manganese",
     "망가니즈/망간",
     x,
-    y,
-    "25-en.ogg"
+    y
   );
   y += h;
   n++;
-  elements[n] = new Element(26, "Fe", "Iron/Ferrum", "철", x, y, "26-en.ogg");
+  elements[n] = new Element(26, "Fe", "Iron/Ferrum", "철", x, y);
   y += h;
   n++;
   elements[n] = new Element(
@@ -226,13 +249,12 @@ function setupElements() {
     "Copper/Cuprum",
     "구리",
     x,
-    y,
-    "29-en.ogg"
+    y
   );
   y += h;
   n++;
 
-  elements[n] = new Element(30, "Zn", "Zinc", "아연", x, y, "30-en.ogg");
+  elements[n] = new Element(30, "Zn", "Zinc", "아연", x, y);
   y += h;
   n++;
 
@@ -242,28 +264,27 @@ function setupElements() {
     "Strontium",
     "스트론튬",
     x,
-    y,
-    "38-en.ogg"
+    y
   );
   y += h;
   n++;
 
-  elements[n] = new Element(47, "Ag", "Silver", "은", x, y, "47-en.ogg");
+  elements[n] = new Element(47, "Ag", "Silver", "은", x, y);
   y += h;
   n++;
-  elements[n] = new Element(53, "I", "Iodine", "아이오딘", x, y, "53-en.ogg");
-  y += h;
-  n++;
-
-  elements[n] = new Element(56, "Ba", "Barium", "바륨", x, y, "56-en.ogg");
+  elements[n] = new Element(53, "I", "Iodine", "아이오딘", x, y);
   y += h;
   n++;
 
-  elements[n] = new Element(78, "Pt", "Platinum", "백금", x, y, "78-en.ogg");
+  elements[n] = new Element(56, "Ba", "Barium", "바륨", x, y);
   y += h;
   n++;
 
-  elements[n] = new Element(79, "Au", "Gold/Aurum", "금", x, y, "79-en.ogg");
+  elements[n] = new Element(78, "Pt", "Platinum", "백금", x, y);
+  y += h;
+  n++;
+
+  elements[n] = new Element(79, "Au", "Gold/Aurum", "금", x, y);
   y += h;
   n++;
 
@@ -273,13 +294,12 @@ function setupElements() {
     "Mercury/Hydrargyrum",
     "수은",
     x,
-    y,
-    "80-en.ogg"
+    y
   );
   y += h;
   n++;
 
-  elements[n] = new Element(82, "Pb", "Lead/Plumbum", "납", x, y, "82-en.ogg");
+  elements[n] = new Element(82, "Pb", "Lead/Plumbum", "납", x, y);
   y += h;
   n++;
 }
