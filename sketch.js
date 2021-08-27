@@ -14,6 +14,7 @@ var voices = [];
 let voiceSelect;
 let enVoice = [];
 let kVoice = [];
+let bVoice = false;
 
 function setup() {
   cnv = createCanvas(300, 700);
@@ -96,14 +97,24 @@ function draw() {
   }
 }
 
+
 function mousePressed() {
+  let sel = voiceSelect.value();
+  let str = splitTokens(sel, ':');
+  let vnumber = Number(str[0]);
+  
   for (let i = 1; i < n; i++) {
     if (elements[i].contains(mouseX, mouseY)) {
-      let sel = voiceSelect.value();
-      let str = splitTokens(sel, ':');
-      let vnumber = Number(str[0]);
       inputTxt.value = elements[i].ename;
-      elements[i].speech(voices[vnumber].lang, vnumber);
+      
+      if( bVoice == false) {
+        bVoice = true;
+        elements[i].speech(voices[vnumber].lang, vnumber);
+      } else {
+        bVoice = false;
+        elements[i].speech('ko-KR', kVoice[0]);
+      }
+      
     }
   }
 }
@@ -128,7 +139,7 @@ class Element {
       rect(this.x, this.y, this.w, this.h);
 
       textSize(this.tsize);
-      fill(0, 102, 153);
+      fill(255, 0, 0);
       text(
         " " +
           this.id +
@@ -143,11 +154,11 @@ class Element {
         this.y + this.tsize
       );
     } else {
-      fill(175);
+      fill(200);
       rect(this.x, this.y, this.w, this.h);
 
       textSize(this.tsize);
-      fill(0, 102, 153);
+      fill(0, 0, 255);
       text(
         " " +
           this.id +
@@ -182,7 +193,6 @@ class Element {
     } else {
       textToSpeech(this.ename, vid);  
     }
-    
   }
 }
 
