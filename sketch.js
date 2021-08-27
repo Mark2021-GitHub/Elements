@@ -304,7 +304,7 @@ function setupElements() {
   elements[n] = new Element(47, "Ag", "Silver / Argentum", "은", x, y);
   y += h;
   n++;
-  elements[n] = new Element(53, "I", "Iodine", "아이오딘", x, y);
+  elements[n] = new Element(53, "I", "Iodine", "아이오딘/요오드", x, y);
   y += h;
   n++;
 
@@ -312,7 +312,7 @@ function setupElements() {
   y += h;
   n++;
 
-  elements[n] = new Element(78, "Pt", "Platinum", "백금", x, y);
+  elements[n] = new Element(78, "Pt", "Platinum", "백금/플래티넘", x, y);
   y += h;
   n++;
 
