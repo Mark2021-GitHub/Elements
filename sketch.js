@@ -3,7 +3,7 @@ let n = 1;
 let x = 10;
 let y = 15;
 let h = 20;
-let w = 250;
+let w = 280;
 
 var inputForm = document.querySelector("form");
 var inputTxt = document.querySelector(".txt");
@@ -50,7 +50,7 @@ function textToSpeech(txt,vid) {
     ut.voiceURI = 'native';
     ut.volume = 1;
     synth.speak(ut);
-    print(voices[vid].name + "(" + voices[vid].lang+")");
+    //print(voices[vid].name + "(" + voices[vid].lang+")");
   }
 }
 
@@ -71,15 +71,13 @@ function setupVoices(){
         defaultVoice = str;
         isDefault = true;
       }
-      print (voices[i].lang);
     } else if( voices[i].lang == "ko-KR"){
       kVoice[k] = i;
       k++;
-      print (voices[i].lang);
     }
   }  
   voiceSelect.selected(defaultVoice);
-  print(defaultVoice);
+  //print(defaultVoice);
 }
 
 function changeVoice(){
@@ -102,17 +100,22 @@ function mousePressed() {
   let sel = voiceSelect.value();
   let str = splitTokens(sel, ':');
   let vnumber = Number(str[0]);
+  let bSwitch = document.getElementById("check1").checked;
   
   for (let i = 1; i < n; i++) {
     if (elements[i].contains(mouseX, mouseY)) {
       inputTxt.value = elements[i].ename;
       
-      if( bVoice == false) {
-        bVoice = true;
-        elements[i].speech(voices[vnumber].lang, vnumber);
+      if(bSwitch == true){
+        if( bVoice == false) {
+          bVoice = true;
+          elements[i].speech(voices[vnumber].lang, vnumber);
+        } else {
+          bVoice = false;
+          elements[i].speech('ko-KR', kVoice[0]);
+        }
       } else {
-        bVoice = false;
-        elements[i].speech('ko-KR', kVoice[0]);
+          elements[i].speech(voices[vnumber].lang, vnumber);
       }
       
     }
@@ -227,7 +230,7 @@ function setupElements() {
   elements[10] = new Element(10, "Ne", "Neon", "네온", x, y);
   y += h;
   n++;
-  elements[11] = new Element(11,"Na","Sodium/Natrium","소듐/나트륨",x,y);
+  elements[11] = new Element(11,"Na","Sodium / Natrium","소듐/나트륨",x,y);
   y += h;
   n++;
   elements[12] = new Element(12,"Mg","Magnesium","마그네슘",x,y);
@@ -251,7 +254,7 @@ function setupElements() {
   elements[18] = new Element(18, "Ar", "Argon", "아르곤", x, y);
   y += h;
   n++;
-  elements[19] = new Element(19, "K","Potassium/Kalium","포타슘/칼륨",x,y);
+  elements[19] = new Element(19, "K","Potassium / Kalium","포타슘/칼륨",x,y);
   y += h;
   n++;
   elements[20] = new Element(20, "Ca", "Calcium", "칼슘", x, y);
@@ -260,10 +263,10 @@ function setupElements() {
   elements[n] = new Element(25,"Mn","Manganese","망가니즈/망간",x,y);
   y += h;
   n++;
-  elements[n] = new Element(26, "Fe", "Iron/Ferrum", "철", x, y);
+  elements[n] = new Element(26, "Fe", "Iron / Ferrum", "철", x, y);
   y += h;
   n++;
-  elements[n] = new Element(29,"Cu","Copper/Cuprum","구리",x,y);
+  elements[n] = new Element(29,"Cu","Copper / Cuprum","구리",x,y);
   y += h;
   n++;
 
@@ -275,7 +278,7 @@ function setupElements() {
   y += h;
   n++;
 
-  elements[n] = new Element(47, "Ag", "Silver", "은", x, y);
+  elements[n] = new Element(47, "Ag", "Silver / Argentum", "은", x, y);
   y += h;
   n++;
   elements[n] = new Element(53, "I", "Iodine", "아이오딘", x, y);
@@ -290,15 +293,15 @@ function setupElements() {
   y += h;
   n++;
 
-  elements[n] = new Element(79, "Au", "Gold/Aurum", "금", x, y);
+  elements[n] = new Element(79, "Au", "Gold / Aurum", "금", x, y);
   y += h;
   n++;
 
-  elements[n] = new Element(80,"Hg","Mercury/Hydrargyrum","수은",x,y);
+  elements[n] = new Element(80,"Hg","Mercury / Hydrargyrum","수은",x,y);
   y += h;
   n++;
 
-  elements[n] = new Element(82, "Pb", "Lead/Plumbum", "납", x, y);
+  elements[n] = new Element(82, "Pb", "Lead / Plumbum", "납", x, y);
   y += h;
   n++;
 }
