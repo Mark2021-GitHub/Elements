@@ -8,11 +8,14 @@ let w = 250;
 // for speechSynthesis;
 var synth = window.speechSynthesis;
 var voices = [];
+let voiceSelect;
+let kvoice1 = 48; //Yuna(ko-KR)
+let kvoice2 = 63; //Google(ko-KR)
+
 
 function textToSpeech(txt,vid) {
   if (synth.speaking) {
-    console.error("speechSynthesis.speaking");
-    return;
+    synth.cancel();
   }
   if (txt !== "") {
     var ut = new SpeechSynthesisUtterance(txt);
@@ -22,21 +25,28 @@ function textToSpeech(txt,vid) {
 }
 
 function setupVoices(){
+  let firstVoice ;
+  let voicestr;
   voices = synth.getVoices();
-  for(var i = 0; i < voices.length; i++) {
-    print(i+":" + voices[i].name + "("+ voices[i].lang+")");
+  firstVoice = "0:" + voices[0].name + "("+ voices[0].lang+")";
+  print(firstVoice);
+  voiceSelect.option(firstVoice);
+  for(var i = 1; i < voices.length; i++) {
+    let str = i+":" + voices[i].name + "("+ voices[i].lang+")";
+    print(str);
+    voiceSelect.option(str);
   }  
+  voiceSelect.selected(firstVoice);
 }
 
 function setup() {
-  createCanvas(300, windowHeight);
-
+  cnv = createCanvas(300, 700);
+  
+  voiceSelect = createSelect();
+  voiceSelect.position(1, cnv.position().y + height+20);
+  
   setupElements();
-  
   setupVoices();
-  
-  //textToSpeech("Hydrogen", 53); //53: Google US English
-  //textToSpeech("수소", 63); //63: Google Korean
 }
 
 function draw() {
@@ -49,7 +59,10 @@ function draw() {
 function mousePressed() {
   for (let i = 1; i < n; i++) {
     if (elements[i].contains(mouseX, mouseY)) {
-      elements[i].speech(53);
+      let sel = voiceSelect.value();
+      let str = splitTokens(sel, ':');
+      let vnumber = Number(str[0]);
+      elements[i].speech(vnumber);
     }
   }
 }
@@ -123,7 +136,12 @@ class Element {
     }
   }
   speech(vid){
-    textToSpeech(this.ename, vid);
+    if(vid == kvoice1 || vid == kvoice2){
+      textToSpeech(this.kname, vid); 
+    } else {
+      textToSpeech(this.ename, vid);  
+    }
+    
   }
 }
 
@@ -152,57 +170,22 @@ function setupElements() {
   elements[8] = new Element(8, "O", "Oxygen", "산소", x, y);
   y += h;
   n++;
-  elements[9] = new Element(
-    9,
-    "F",
-    "Fluorine",
-    "플루오린/불소",
-    x,
-    y
-  );
+  elements[9] = new Element(9, "F", "Fluorine","플루오린/불소",x,y);
   y += h;
   n++;
   elements[10] = new Element(10, "Ne", "Neon", "네온", x, y);
   y += h;
   n++;
-  elements[11] = new Element(
-    11,
-    "Na",
-    "Sodium/Natrium",
-    "소듐/나트륨",
-    x,
-    y
-  );
+  elements[11] = new Element(11,"Na","Sodium/Natrium","소듐/나트륨",x,y);
   y += h;
   n++;
-  elements[12] = new Element(
-    12,
-    "Mg",
-    "Magnesium",
-    "마그네슘",
-    x,
-    y
-  );
+  elements[12] = new Element(12,"Mg","Magnesium","마그네슘",x,y);
   y += h;
   n++;
-  elements[13] = new Element(
-    13,
-    "Al",
-    "Aluminium",
-    "알루미늄",
-    x,
-    y
-  );
+  elements[13] = new Element(13,"Al","Aluminium","알루미늄",x,y);
   y += h;
   n++;
-  elements[14] = new Element(
-    14,
-    "Si",
-    "Silicon",
-    "규소/실리콘",
-    x,
-    y
-  );
+  elements[14] = new Element(14,"Si","Silicon","규소/실리콘",x,y);
   y += h;
   n++;
   elements[15] = new Element(15, "P", "Phosphorus", "인", x, y);
@@ -217,40 +200,19 @@ function setupElements() {
   elements[18] = new Element(18, "Ar", "Argon", "아르곤", x, y);
   y += h;
   n++;
-  elements[19] = new Element(
-    19,
-    "K",
-    "Potassium/Kalium",
-    "포타슘/칼륨",
-    x,
-    y
-  );
+  elements[19] = new Element(19, "K","Potassium/Kalium","포타슘/칼륨",x,y);
   y += h;
   n++;
   elements[20] = new Element(20, "Ca", "Calcium", "칼슘", x, y);
   y += h;
   n++;
-  elements[n] = new Element(
-    25,
-    "Mn",
-    "Manganese",
-    "망가니즈/망간",
-    x,
-    y
-  );
+  elements[n] = new Element(25,"Mn","Manganese","망가니즈/망간",x,y);
   y += h;
   n++;
   elements[n] = new Element(26, "Fe", "Iron/Ferrum", "철", x, y);
   y += h;
   n++;
-  elements[n] = new Element(
-    29,
-    "Cu",
-    "Copper/Cuprum",
-    "구리",
-    x,
-    y
-  );
+  elements[n] = new Element(29,"Cu","Copper/Cuprum","구리",x,y);
   y += h;
   n++;
 
@@ -258,14 +220,7 @@ function setupElements() {
   y += h;
   n++;
 
-  elements[n] = new Element(
-    38,
-    "Sr",
-    "Strontium",
-    "스트론튬",
-    x,
-    y
-  );
+  elements[n] = new Element(38,"Sr","Strontium","스트론튬",x,y);
   y += h;
   n++;
 
@@ -288,14 +243,7 @@ function setupElements() {
   y += h;
   n++;
 
-  elements[n] = new Element(
-    80,
-    "Hg",
-    "Mercury/Hydrargyrum",
-    "수은",
-    x,
-    y
-  );
+  elements[n] = new Element(80,"Hg","Mercury/Hydrargyrum","수은",x,y);
   y += h;
   n++;
 
