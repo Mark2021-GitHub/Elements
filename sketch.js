@@ -27,6 +27,8 @@ function setupVoices(){
   let voicestr;
   let e=0;
   let k=0;
+  let isDefault = false;
+  let defaultVoice;
   voices = synth.getVoices();
   for(var i = 0; i < voices.length; i++) {
     let str = i+":" + voices[i].name + "("+ voices[i].lang+")";
@@ -34,6 +36,10 @@ function setupVoices(){
     if(voices[i].lang == "en-US") {
       enVoice[e] = i;
       e ++;
+      if(isDefault == false){
+        defaultVoice = str;
+        isDefault = true;
+      }
       print (voices[i].lang);
     } else if( voices[i].lang == "ko-KR"){
       kVoice[k] = i;
@@ -41,7 +47,8 @@ function setupVoices(){
       print (voices[i].lang);
     }
   }  
-  voiceSelect.selected(enVoice[0]);
+  voiceSelect.selected(defaultVoice);
+  print(defaultVoice);
 }
 
 function setup() {
