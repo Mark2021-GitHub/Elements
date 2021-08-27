@@ -9,9 +9,8 @@ let w = 250;
 var synth = window.speechSynthesis;
 var voices = [];
 let voiceSelect;
-let kvoice1 = 48; //Yuna(ko-KR)
-let kvoice2 = 63; //Google(ko-KR)
-
+let enVoice = [];
+let kVoice = [];
 
 function textToSpeech(txt,vid) {
   if (synth.speaking) {
@@ -25,18 +24,24 @@ function textToSpeech(txt,vid) {
 }
 
 function setupVoices(){
-  let firstVoice ;
   let voicestr;
+  let e=0;
+  let k=0;
   voices = synth.getVoices();
-  firstVoice = "0:" + voices[0].name + "("+ voices[0].lang+")";
-  print(firstVoice);
-  voiceSelect.option(firstVoice);
-  for(var i = 1; i < voices.length; i++) {
+  for(var i = 0; i < voices.length; i++) {
     let str = i+":" + voices[i].name + "("+ voices[i].lang+")";
-    print(str);
     voiceSelect.option(str);
+    if(voices[i].lang == "en-US") {
+      enVoice[e] = i;
+      e ++;
+      print (voices[i].lang);
+    } else if( voices[i].lang == "ko-KR"){
+      kVoice[k] = i;
+      k++;
+      print (voices[i].lang);
+    }
   }  
-  voiceSelect.selected(firstVoice);
+  voiceSelect.selected(enVoice[0]);
 }
 
 function setup() {
@@ -136,7 +141,7 @@ class Element {
     }
   }
   speech(vid){
-    if(vid == kvoice1 || vid == kvoice2){
+    if(vid == kVoice[0]){
       textToSpeech(this.kname, vid); 
     } else {
       textToSpeech(this.ename, vid);  
