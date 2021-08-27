@@ -12,6 +12,8 @@ var inputTxt = document.querySelector(".txt");
 var synth = window.speechSynthesis;
 var voices = [];
 let voiceSelect;
+let pitchSlider;
+let rateSlider;
 let enVoice = [];
 let kVoice = [];
 let bVoice = false;
@@ -19,13 +21,19 @@ let bVoice = false;
 function setup() {
   cnv = createCanvas(300, 700);
   
-  voiceSelect = createSelect();
-  voiceSelect.position(1, cnv.position().y + height+20);
   setupVoices();
-  voiceSelect.changed(changeVoice);
+  
   setupElements();
   
 }
+
+function draw() {
+  background(220);
+  for (let i = 1; i < n; i++) {
+    elements[i].show(mouseX, mouseY);
+  }
+}
+
 
 inputForm.onsubmit = function (event) {
    event.preventDefault();
@@ -40,15 +48,16 @@ inputForm.onsubmit = function (event) {
 function textToSpeech(txt,vid) {
   if (synth.speaking) {
     synth.cancel();
+    //return;
   }
   if (txt !== "") {
     var ut = new SpeechSynthesisUtterance(txt);
    
     ut.voice = voices[vid];
-    ut.pitch = 1;
-    ut.rate = 1;
-    ut.voiceURI = 'native';
-    ut.volume = 1;
+    ut.pitch = pitchSlider.value();
+    ut.rate = rateSlider.value();
+    //ut.voiceURI = 'native';
+    //ut.volume = 1;
     synth.speak(ut);
     //print(voices[vid].name + "(" + voices[vid].lang+")");
   }
@@ -60,6 +69,10 @@ function setupVoices(){
   let k=0;
   let isDefault = false;
   let defaultVoice;
+  
+  voiceSelect = createSelect();
+  voiceSelect.position(1, cnv.position().y + height+20);
+  
   voices = synth.getVoices();
   for(var i = 0; i < voices.length; i++) {
     let str = i+":" + voices[i].name + "("+ voices[i].lang+")";
@@ -77,7 +90,23 @@ function setupVoices(){
     }
   }  
   voiceSelect.selected(defaultVoice);
-  //print(defaultVoice);
+  voiceSelect.changed(changeVoice);
+  
+  rateSlider = createSlider(0.5, 1, 1, 0.1);
+  rateSlider.position(1, voiceSelect.position().y+20);
+  rateSlider.style('width', '140px');
+  
+  pitchSlider = createSlider(0, 2, 1, 0.1);
+  pitchSlider.position(rateSlider.position().x + 150, rateSlider.position().y);
+  pitchSlider.style('width', '140px');
+  
+  let div1 = createDiv('음성 속도 조절');
+div1.style('font-size', '16px');
+div1.position(rateSlider.position().x ,rateSlider.position().y +20 );
+  let div2 = createDiv('음성 높이 조절');
+div2.style('font-size', '16px');
+div2.position(pitchSlider.position().x ,pitchSlider.position().y +20 );
+  
 }
 
 function changeVoice(){
@@ -88,12 +117,6 @@ function changeVoice(){
   textToSpeech(inputTxt.value, vnumber);
 }
 
-function draw() {
-  background(220);
-  for (let i = 1; i < n; i++) {
-    elements[i].show(mouseX, mouseY);
-  }
-}
 
 
 function mousePressed() {
@@ -108,11 +131,11 @@ function mousePressed() {
       
       if(bSwitch == true){
         if( bVoice == false) {
-          bVoice = true;
           elements[i].speech(voices[vnumber].lang, vnumber);
-        } else {
-          bVoice = false;
+          bVoice = true;
+        } else if(bVoice == true) {
           elements[i].speech('ko-KR', kVoice[0]);
+          bVoice = false;
         }
       } else {
           elements[i].speech(voices[vnumber].lang, vnumber);
