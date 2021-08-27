@@ -5,6 +5,9 @@ let y = 15;
 let h = 20;
 let w = 250;
 
+var inputForm = document.querySelector("form");
+var inputTxt = document.querySelector(".txt");
+
 // for speechSynthesis;
 var synth = window.speechSynthesis;
 var voices = [];
@@ -12,14 +15,41 @@ let voiceSelect;
 let enVoice = [];
 let kVoice = [];
 
+function setup() {
+  cnv = createCanvas(300, 700);
+  
+  voiceSelect = createSelect();
+  voiceSelect.position(1, cnv.position().y + height+20);
+  setupVoices();
+  voiceSelect.changed(changeVoice);
+  setupElements();
+  
+}
+
+inputForm.onsubmit = function (event) {
+   event.preventDefault();
+  let sel = voiceSelect.value();
+  let str = splitTokens(sel, ':');
+  let vnumber = Number(str[0]);
+    
+  textToSpeech(inputTxt.value, vnumber);
+};
+
+
 function textToSpeech(txt,vid) {
   if (synth.speaking) {
     synth.cancel();
   }
   if (txt !== "") {
     var ut = new SpeechSynthesisUtterance(txt);
+   
     ut.voice = voices[vid];
+    ut.pitch = 1;
+    ut.rate = 1;
+    ut.voiceURI = 'native';
+    ut.volume = 1;
     synth.speak(ut);
+    print(voices[vid].name + "(" + voices[vid].lang+")");
   }
 }
 
@@ -51,14 +81,12 @@ function setupVoices(){
   print(defaultVoice);
 }
 
-function setup() {
-  cnv = createCanvas(300, 700);
-  
-  voiceSelect = createSelect();
-  voiceSelect.position(1, cnv.position().y + height+20);
-  
-  setupElements();
-  setupVoices();
+function changeVoice(){
+  let sel = voiceSelect.value();
+  let str = splitTokens(sel, ':');
+  let vnumber = Number(str[0]);
+    
+  textToSpeech(inputTxt.value, vnumber);
 }
 
 function draw() {
@@ -74,7 +102,8 @@ function mousePressed() {
       let sel = voiceSelect.value();
       let str = splitTokens(sel, ':');
       let vnumber = Number(str[0]);
-      elements[i].speech(vnumber);
+      inputTxt.value = elements[i].ename;
+      elements[i].speech(voices[vnumber].lang, vnumber);
     }
   }
 }
@@ -147,8 +176,8 @@ class Element {
       return false;
     }
   }
-  speech(vid){
-    if(vid == kVoice[0]){
+  speech(lang, vid){
+    if(lang == 'ko-KR'){
       textToSpeech(this.kname, vid); 
     } else {
       textToSpeech(this.ename, vid);  
