@@ -7,23 +7,20 @@
     <meta charset="utf-8" />
   </head>
   <body>
-    <h3>원소 이름 듣기/따라하기</h3>
-    <p> *원소 번호[기호] 영어명/라틴어명 (공식원소명/관용어)<p>
-    
+    <h3>원소 이름 듣고 따라하기</h3> 
+    <p> *원소 번호[기호] 영어명/라틴어명 (공식원소명/관용어)</p>
     <form>
+       <input type="radio" id="en" name="nextLang" value="en" checked>
+         영어
+      <input type="radio" id="ko" name="nextLang" value="ko">
+         한국어  <br>
      <input type="checkbox" id="check1" checked /> 클릭할 때마다 영어/한국어 원소 이름 번갈아 듣기<br>
     
       <input type="text" class="txt" value="Hydrogen"/>
       <button type="submit" id="play">듣기</button>
-      <input type="button" id="playNext" value="차례로 듣기"/> <br>
-      <input type="radio" id="en" name="nextLang" value="en" checked>
-         영어
-      <input type="radio" id="ko" name="nextLang" value="ko">
-         한국어
-    
-     
-      
+      <input type="button" id="playNext" value="차례로 듣기"/>
     </form>
+  
     <script src="sketch.js"></script>
   </body>
 </html>
