@@ -7,6 +7,9 @@ let w = 280;
 
 var inputForm = document.querySelector("form");
 var inputTxt = document.querySelector(".txt");
+var playNextBtton = document.getElementById("playNext");
+var radioEn = document.getElementById("en");
+
 
 // for speechSynthesis;
 var synth = window.speechSynthesis;
@@ -17,6 +20,8 @@ let rateSlider;
 let enVoice = [];
 let kVoice = [];
 let bVoice = false;
+let onplay = false;
+let next = 1 ;
 
 function setup() {
   cnv = createCanvas(300, 700);
@@ -35,20 +40,56 @@ function draw() {
 }
 
 
-inputForm.onsubmit = function (event) {
-   event.preventDefault();
+playNextBtton.onclick = function (){
+  playNext();
+}
+
+function playNext(){
+  if(synth.speaking) {
+    return;
+  }
+  
   let sel = voiceSelect.value();
   let str = splitTokens(sel, ':');
   let vnumber = Number(str[0]);
-    
-  textToSpeech(inputTxt.value, vnumber);
+  
+   
+   if(radioEn.checked == true){
+     inputTxt.value = elements[next].ename;
+     elements[next].speech(voices[vnumber].lang, vnumber);  
+   } else {
+      inputTxt.value = elements[next].kname;
+     elements[next].speech('ko-KR', kVoice[0]);  
+   }
+   
+   next ++;
+   if(next == n) next = 1;
+}
+
+inputForm.onsubmit = function (event) {
+  event.preventDefault();
+  if(synth.speaking) {
+    return;
+  }
+  
+  let sel = voiceSelect.value();
+  let str = splitTokens(sel, ':');
+  let vnumber = Number(str[0]);  
+  
+  if(radioEn.checked == true){
+    textToSpeech(inputTxt.value, vnumber);
+  } else {
+    textToSpeech(inputTxt.value, kVoice[0]);
+  }
+  
+  
 };
 
 
 function textToSpeech(txt,vid) {
   if (synth.speaking) {
-    synth.cancel();
-    //return;
+    //synth.cancel();
+    return;
   }
   if (txt !== "") {
     var ut = new SpeechSynthesisUtterance(txt);
@@ -59,9 +100,12 @@ function textToSpeech(txt,vid) {
     //ut.voiceURI = 'native';
     //ut.volume = 1;
     synth.speak(ut);
-    //print(voices[vid].name + "(" + voices[vid].lang+")");
+    ut.onboundary = function(event) {
+     // console.log(event.name + ':' + event.elapsedTime);
+    }
   }
 }
+
 
 function setupVoices(){
   let voicestr;
@@ -117,8 +161,6 @@ function changeVoice(){
   textToSpeech(inputTxt.value, vnumber);
 }
 
-
-
 function mousePressed() {
   let sel = voiceSelect.value();
   let str = splitTokens(sel, ':');
@@ -158,6 +200,7 @@ class Element {
     this.tsize = 15;
    
   }
+  
   show(mx, my) {
     stroke(255);
     if (this.contains(mx, my)) {
