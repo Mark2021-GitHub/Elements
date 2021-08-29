@@ -9,7 +9,7 @@ var inputForm = document.querySelector("form");
 var inputTxt = document.querySelector(".txt");
 var playNextBtton = document.getElementById("playNext");
 var radioEn = document.getElementById("en");
-
+var bSwitch = document.getElementById("check1");
 
 // for speechSynthesis;
 var synth = window.speechSynthesis;
@@ -20,7 +20,7 @@ let rateSlider;
 let enVoice = [];
 let kVoice = [];
 let bVoice = false;
-let onplay = false;
+
 let next = 1 ;
 
 function setup() {
@@ -44,6 +44,8 @@ playNextBtton.onclick = function (){
   playNext();
 }
 
+let isNext = false;
+
 function playNext(){
   if(synth.speaking) {
     return;
@@ -53,17 +55,31 @@ function playNext(){
   let str = splitTokens(sel, ':');
   let vnumber = Number(str[0]);
   
-   
-   if(radioEn.checked == true){
-     inputTxt.value = elements[next].ename;
-     elements[next].speech(voices[vnumber].lang, vnumber);  
+   if(bSwitch.checked == true){
+       if(isNext == false ){
+         inputTxt.value = elements[next].ename;
+         //elements[next].speech(voices[vnumber].lang, vnumber);
+         textToSpeech(elements[next].ename, vnumber);
+         isNext = true;
+       } else {
+         inputTxt.value = elements[next].kname;
+         textToSpeech(elements[next].kname, kVoice[0]);
+         next ++;
+         if(next == n) next = 1;  
+         isNext = false;
+       }
    } else {
-      inputTxt.value = elements[next].kname;
-     elements[next].speech('ko-KR', kVoice[0]);  
+     if(radioEn.checked == true){
+       inputTxt.value = elements[next].ename;
+       elements[next].speech(voices[vnumber].lang, vnumber);  
+     } else {
+        inputTxt.value = elements[next].kname;
+       elements[next].speech('ko-KR', kVoice[0]);  
+     }
+     next ++;
+     if(next == n) next = 1;  
    }
    
-   next ++;
-   if(next == n) next = 1;
 }
 
 inputForm.onsubmit = function (event) {
@@ -165,22 +181,29 @@ function mousePressed() {
   let sel = voiceSelect.value();
   let str = splitTokens(sel, ':');
   let vnumber = Number(str[0]);
-  let bSwitch = document.getElementById("check1").checked;
+ 
   
   for (let i = 1; i < n; i++) {
     if (elements[i].contains(mouseX, mouseY)) {
-      inputTxt.value = elements[i].ename;
       
-      if(bSwitch == true){
+      if(bSwitch.checked == true){
+        inputTxt.value = elements[i].ename;
         if( bVoice == false) {
-          elements[i].speech(voices[vnumber].lang, vnumber);
+          textToSpeech(elements[i].ename, vnumber);
           bVoice = true;
         } else if(bVoice == true) {
-          elements[i].speech('ko-KR', kVoice[0]);
+          textToSpeech(elements[i].kname, kVoice[0]);
           bVoice = false;
         }
       } else {
-          elements[i].speech(voices[vnumber].lang, vnumber);
+           if(radioEn.checked == true){
+              //elements[i].speech(voices[vnumber].lang, vnumber);
+              inputTxt.value = elements[i].ename;
+              textToSpeech(elements[i].ename, vnumber);
+            } else {
+              inputTxt.value = elements[i].kname;
+              textToSpeech(elements[i].kname, kVoice[0]);
+            }    
       }
       
     }
