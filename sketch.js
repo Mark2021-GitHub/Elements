@@ -135,7 +135,11 @@ function playNext(){
      } else if(radioKo.checked == true ){
         inputTxt.value = elements[next].kname; 
        textToSpeech(elements[next].kname, kVoice[0]);
-     } 
+     } else if(radioKodesc.checked == true ){ 
+        inputTxt.value = elements[next].kname; 
+        textToSpeech(elements[next].kname + " "+elements[next].desc, kVoice[0]);
+       
+     }
      next ++;
      if(next == n) next = 1;  
    }
