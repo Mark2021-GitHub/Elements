@@ -9,6 +9,8 @@ var inputForm = document.querySelector("form");
 var inputTxt = document.querySelector(".txt");
 var playNextBtton = document.getElementById("playNext");
 var radioEn = document.getElementById("en");
+var radioKo = document.getElementById("ko");
+var radioKodesc = document.getElementById("koDesc");
 var bSwitch = document.getElementById("check1");
 var dtText = document.getElementById("dt1");
 var ddText = document.getElementById("dd1");
@@ -130,10 +132,10 @@ function playNext(){
      if(radioEn.checked == true){
        inputTxt.value = elements[next].ename;
        elements[next].speech(voices[vnumber].lang, vnumber);  
-     } else {
-        inputTxt.value = elements[next].kname;
-       elements[next].speech('ko-KR', kVoice[0]);  
-     }
+     } else if(radioKo.checked == true ){
+        inputTxt.value = elements[next].kname; 
+       textToSpeech(elements[next].kname, kVoice[0]);
+     } 
      next ++;
      if(next == n) next = 1;  
    }
@@ -258,10 +260,15 @@ function mousePressed() {
               //elements[i].speech(voices[vnumber].lang, vnumber);
               inputTxt.value = elements[i].ename;
               textToSpeech(elements[i].ename, vnumber);
-            } else {
+            } else if(radioKo.checked == true ) {
               inputTxt.value = elements[i].kname;
               textToSpeech(elements[i].kname, kVoice[0]);
-            }    
+            }  else if(radioKodesc.checked == true ){ 
+               inputTxt.value = elements[i].kname; 
+               textToSpeech(elements[i].kname + " "+elements[i].desc, kVoice[0]);
+       
+     }
+        
       }
       
     }
@@ -269,64 +276,64 @@ function mousePressed() {
 }
 
 function setupElement() {
-  elements[1] = new Element(1, "H", "Hydrogen", "수소", x, y, ": 가장 작고 가벼운 원소");
+  elements[1] = new Element(1, "H", "Hydrogen", "수소", x, y, ": 가장 가볍고 불에 타기 쉬운 기체");
   y += h;
   n++;
-  elements[2] = new Element(2, "He", "Helium", "헬륨", x, y, ": 의외로 지구에서는 희귀한 원소");
+  elements[2] = new Element(2, "He", "Helium", "헬륨", x, y, ": 풍선을 뜨게하는 가벼운 기체");
   y += h;
   n++;
-  elements[3] = new Element(3, "Li", "Lithium", "리튬", x, y, ": 가장 가벼운 금속원소");
+  elements[3] = new Element(3, "Li", "Lithium", "리튬", x, y, ": 가장 가벼운 금속");
   y += h;
   n++;
-  elements[4] = new Element(4, "Be", "Beryllium", "베릴륨", x, y, ": 알루미늄보다 가볍고 강철보다 강한 금속");
+  elements[4] = new Element(4, "Be", "Beryllium", "베릴륨", x, y, ": 알루미늄보다 가볍고 강철보다 단단한 금속");
   y += h;
   n++;
-  elements[5] = new Element(5, "B", "Boron", "붕소", x, y, ": ");
+  elements[5] = new Element(5, "B", "Boron", "붕소", x, y, ": 불에 타기 어려워 내열유리, 로켓 엔진 노즐등에 사용되는 반금속");
   y += h;
   n++;
-  elements[6] = new Element(6, "C", "Carbon", "탄소", x, y, ": ");
+  elements[6] = new Element(6, "C", "Carbon", "탄소", x, y, ": 다이아몬드, 연필심, 유기화합물을 이루는 생명의 원소");
   y += h;
   n++;
-  elements[7] = new Element(7, "N", "Nitrogen", "질소", x, y, ": ");
+  elements[7] = new Element(7, "N", "Nitrogen", "질소", x, y, ": 공기의 78%를 차지하는 기체");
   y += h;
   n++;
-  elements[8] = new Element(8, "O", "Oxygen", "산소", x, y, ": ");
+  elements[8] = new Element(8, "O", "Oxygen", "산소", x, y, ": 물질을 연소시키거나 산화시키는 기체");
   y += h;
   n++;
-  elements[9] = new Element(9, "F", "Fluorine","플루오린/불소",x,y, ": ");
+  elements[9] = new Element(9, "F", "Fluorine","플루오린/불소",x,y, ": 조리 기구의 코팅제나 치약에 사용되는 반응성이 높은 기체");
   y += h;
   n++;
-  elements[10] = new Element(10, "Ne", "Neon", "네온", x, y, ": ");
+  elements[10] = new Element(10, "Ne", "Neon", "네온", x, y, ": 전압을 가하면 붉게 빛나는 기체");
   y += h;
   n++;
-  elements[11] = new Element(11,"Na","Sodium / Natrium","소듐/나트륨",x,y, ": ");
+  elements[11] = new Element(11,"Na","Sodium / Natrium","소듐/나트륨",x,y, ": 바닷물 속 소금에 풍부하게 존재하는 무른 금속");
   y += h;
   n++;
-  elements[12] = new Element(12,"Mg","Magnesium","마그네슘",x,y, ": ");
+  elements[12] = new Element(12,"Mg","Magnesium","마그네슘",x,y, ": 쉽게 불에 타면서 밝은 백색광을 내고, 경량,고강도의 첨단 합금 소재 금속");
   y += h;
   n++;
-  elements[13] = new Element(13,"Al","Aluminium","알루미늄",x,y, ": ");
+  elements[13] = new Element(13,"Al","Aluminium","알루미늄",x,y, ": 가볍고, 열 전도성이 좋아 다양한 합금 소재로 산업에서 널리 활용되는 금속");
   y += h;
   n++;
-  elements[14] = new Element(14,"Si","Silicon","규소/실리콘",x,y, ": ");
+  elements[14] = new Element(14,"Si","Silicon","규소/실리콘",x,y, ": 지각에 산소 다음으로 풍부하게 존재하는 가장 저렴한 반도체");
   y += h;
   n++;
-  elements[15] = new Element(15, "P", "Phosphorus", "인", x, y, ": ");
+  elements[15] = new Element(15, "P", "Phosphorus", "인", x, y, ": 소변에서 추출되는 생체 화합물의 필수 원소인 비금속");
   y += h;
   n++;
-  elements[16] = new Element(16, "S", "Sulfur", "황", x, y, ": ");
+  elements[16] = new Element(16, "S", "Sulfur", "황", x, y, ": 화산지대에서 직접 채굴 되는 노란색 비금속"); // 황산화물은 특유의 냄새가 나서 천연가스에 황화수소를 첨가해 가스 누출시 냄새로 알아차리게 하는 용도
   y += h;
   n++;
-  elements[17] = new Element(17, "Cl", "Chlorine", "염소", x, y, ": ");
+  elements[17] = new Element(17, "Cl", "Chlorine", "염소", x, y, ": 자극적인 냄새가 있는 황록색 기체");
   y += h;
   n++;
-  elements[18] = new Element(18, "Ar", "Argon", "아르곤", x, y, ": ");
+  elements[18] = new Element(18, "Ar", "Argon", "아르곤", x, y, ": 반응성이 거의 없는 게으른 기체");
   y += h;
   n++;
-  elements[19] = new Element(19, "K","Potassium / Kalium","포타슘/칼륨",x,y, ": ");
+  elements[19] = new Element(19, "K","Potassium / Kalium","포타슘/칼륨",x,y, ": 비료의 3대 요소중 하나로 물과 격렬하게 반응하는 무른 금속");
   y += h;
   n++;
-  elements[20] = new Element(20, "Ca", "Calcium", "칼슘", x, y, ": ");
+  elements[20] = new Element(20, "Ca", "Calcium", "칼슘", x, y, ": 뼈와 치아의 주성분이 되는 금속");
   y += h;
   n++;
   elements[21] = new Element(21, "Sc", "Scandium", "스칸듐", x, y, ": ");
